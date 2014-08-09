@@ -8,11 +8,15 @@
 
 <script>
 	$(document).ready(function(){
-		var options = {
+		/*var options = {
 			title: 'Awesome Popup Window!',
 			content: '<div>Hey this is <b><i>HTML</i></b>!</div>'
 		};
-		new PopupWindow(options);
+		new PopupWindow(options);*/
+		new PopupWindow({title:'Awesome!', content:'<b>Great!</b>, we can use HTML.',theme:'light bordered',position:{x:100,y:100}})
+       
+        
+        new PopupWindow({title:'Awesome!', content:'<b>Great!</b>, we can use HTML.',theme:'dark'})
 	});
 </script>
 </body>
