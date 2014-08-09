@@ -21,4 +21,4 @@ Usage
 ```js
 popup1 = new PopupWindow({title:'Awesome!', content:'<b>Great!</b>, we can use HTML.'})
 ```
-![Alt text](http://kevinkl3.com/images/popup1.png "Result!")
+![Alt text](http://kevinkl3.com/images/popup2.png "Result!")
