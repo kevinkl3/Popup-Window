@@ -1,7 +1,7 @@
-Popup-Window-JS
+Popup-Window
 ===============
 
-Create personalized, draggable and resizable popup windows with this simple library.
+Create personalized, draggable and resizable popup windows with this simple javascript library.
 
 Dependencies
 -----------
