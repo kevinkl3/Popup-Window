@@ -1,0 +1,17 @@
+{
+    "name": "PopupWindow",
+    "version": "0.0.1",
+    "main": "dist/popupwindow.min.js",
+    "ignore": [
+        "src",
+        ".bowerrc",
+        ".gitignore",
+        ".jshintignore",
+        ".jshintrc",
+        "bower.json",
+        "README.md"
+    ],
+    "dependencies": {
+        "jquery": "*",
+    },
+}
