@@ -9,13 +9,18 @@
     }else if (typeof exports != 'undefined'){
     
         exports.PopupWindow = factory( (root.jQuery || root.$) );
-    
+    }else if(typeof require != "undefined" && require.register){
+
+        require.register("kevinkl3/popupwindow", function(exports, require, module) {
+            module.exports = factory(root.jQuery || root.$);
+        });
+
     }else{
         root.PopupWindow = factory( (root.jQuery || root.$) );
     }
 
 })(this, function( $ ){
-    PopupWindow = function (options){
+    var PopupWindow = function (options){
         if(this == PopupWindow) return new PopupWindow(options);
         var defaults = {
             title: '-',
