@@ -45,19 +45,27 @@
             minWidth: 300,
             minHeight: 100,
             initialZIndex: 1100,
+            container: null,
+            constrainToContainer: false
         };
         options = $.extend(defaults,options);
         this.version = 'v0.1';
         var t = this;
         this.onMouseMove = function(e){
-            //console.log(arguments);
-            t.jel.css('left', this.cx + e.clientX - this.offsetX);
-            t.jel.css('top', this.cy + e.clientY - this.offsetY);
+            if (window.getSelection) { window.getSelection().removeAllRanges(); }
+            var pX = this.cx + e.clientX - this.offsetX;
+            var pY = this.cy + e.clientY - this.offsetY;
+            if (options.constrainToContainer && t.bounds) {
+              pX = Math.min(Math.max(pX, t.bounds.left), t.bounds.right);
+              pY = Math.min(Math.max(pY, t.bounds.top), t.bounds.bottom);
+            }
+            t.jel.css('left', pX);
+            t.jel.css('top', pY);
         };
         
         
         this.close = function(){
-            t.jel.remove();
+            t.jel.trigger('closePopup').remove();
         };
         
         this.onResize = function(e){
@@ -73,6 +81,17 @@
         };
         
         this.getContentDiv = function(){return t.contentDiv;};
+
+        this.refreshBounds = function() {
+          if (t.container) {
+            t.bounds = {
+              top: t.container.offset().top,
+              left: t.container.offset().left,
+              bottom: t.container.offset().top + t.container.height() - t.jel.height(),
+              right: t.container.offset().left + t.container.width() - t.jel.width(),
+            };
+          }
+        };
         /* MAIN SETUP*/
         this.jel = $('<div></div>');
         this.el = this.jel[0];
@@ -80,6 +99,12 @@
         this.titleDiv = $('<div></div>');
         this.closeBtn = $('<a href="#"></a>');
         this.contentDiv = $('<div></div>');
+        if (options.container) {
+          this.container = options.container.jquery ? options.container :
+            $(options.container);
+        }
+
+        (this.container || $('body')).append(this.el);
         
         var titleDiv = this.titleDiv;
         var contentDiv = this.contentDiv;
@@ -88,11 +113,22 @@
         pop.addClass('PopupWindow');
         pop.addClass(options.theme);
         pop.css('position',options.fixed ? 'fixed' : 'absolute');
+
         pop.css('width',options.width);
         pop.css('height',options.height);
-        pop.css('top',options.position.y);
-        pop.css('left',options.position.x);
         pop.css('z-index',options.initialZIndex);
+
+        var pX = options.position.x;
+        var pY = options.position.y;
+        if (t.container && options.constrainToContainer) {
+          t.refreshBounds();
+          pX = Math.min(Math.max(pX, t.bounds.left), t.bounds.right);
+          pY = Math.min(Math.max(pY, t.bounds.top), t.bounds.bottom);
+          console.log(pX, pY, t.bounds);
+        } 
+
+        pop.css('top',pY);
+        pop.css('left',pX);
         
         $.each(options.style,function(k,v){
             pop.css(k,v);
@@ -129,11 +165,12 @@
         /*bind events*/
         titleDiv.mousedown(function(e){
             if(PopupWindow.mousedown || e.button == 2)return;
-            t.jel.css('z-index',PopupWindow.zi++);
+            t.jel.css('z-index', PopupWindow.zi++);
             t.offsetX = e.clientX;
             t.offsetY = e.clientY;
             t.cx = parseInt(t.jel.css('left'));
             t.cy = parseInt(t.jel.css('top'));
+            t.refreshBounds();
             PopupWindow.current = t; 
             PopupWindow.mousedown = true;
         });
@@ -161,7 +198,12 @@
                     return true;
                 }
             });
-            $(document).mouseup(function(){PopupWindow.current = null; PopupWindow.mousedown = false; PopupWindow.doresize = false;});
+            $(document).mouseup(function(){
+              PopupWindow.current = null; 
+              if (PopupWindow.doresize) { t.jel.trigger('resizePopup'); }
+              PopupWindow.mousedown = false; 
+              PopupWindow.doresize = false;
+            });
             PopupWindow.zi = options.initialZIndex;
         }else{
             t.jel.css('z-index',PopupWindow.zi++);
@@ -188,10 +230,6 @@
                 t.cy = parseInt(t.jel.css('top'));
             });
         }
-        
-        /*Append to Body*/
-        $('body').append(this.el);
-        //console.log(this);
     }
 
     return PopupWindow;
