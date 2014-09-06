@@ -70,6 +70,7 @@
                 t.jel.css('height', e.clientY - t.cy);
                 //t.contentDiv.css('height',e.clientY - t.cy - options.titleHeight)
             }
+	       $(t).trigger('resizePopup');
         };
         
         this.getContentDiv = function(){return t.contentDiv;};
