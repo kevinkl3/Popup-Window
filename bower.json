@@ -1,6 +1,6 @@
 {
     "name": "PopupWindow",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "main": ["dist/popupwindow.min.js","dist/popupwindow.min.css"],
     "ignore": [
         "src",
