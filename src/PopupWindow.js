@@ -33,10 +33,8 @@
                 y: 300,
             },
             style: {
-
             },
             attrs:{
-
             },
             class: '',
             fixed: true,
